@@ -7,7 +7,7 @@ use utf8;
 
 BEGIN {
 	$App::perlrdf::Command::Query::AUTHORITY = 'cpan:TOBYINK';
-	$App::perlrdf::Command::Query::VERSION   = '0.001';
+	$App::perlrdf::Command::Query::VERSION   = '0.002';
 }
 
 use App::perlrdf -command;
@@ -36,6 +36,7 @@ use constant opt_spec => (
 	[ 'autograph|G',       'Generate graph URI based on input URI' ],
 	[]=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>,
 	[ 'endpoint=s',        'Remote SPARQL Protocol endpoint' ],
+	[ 'query_method=s',    'Query method (GET/POST/etc)' ],
 	[]=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>=>,
 	[ 'execute|e=s',       'Query to execute' ],
 	[ 'sparql-file|f=s',   'File containing query to execute' ],
@@ -52,6 +53,10 @@ sub validate_args
 	my %exclusions = (
 		execute  => ['sparql_file'],
 		endpoint => [
+			qw[ store dbi sqlite username password host port dbname database ],
+			qw[ input input_spec input_format input_base ],
+		],
+		query_method => [
 			qw[ store dbi sqlite username password host port dbname database ],
 			qw[ input input_spec input_format input_base ],
 		],
@@ -174,9 +179,32 @@ sub _process_sparql
 	my ($self, $opt, $arg, $sparql, $model) = @_;
 	
 	my $qclass = ref $model ? 'RDF::Query' : 'RDF::Query::Client';
-	my $query  = $qclass->new($sparql)
-		or die RDF::Query->error;
-	my $result = $query->execute($model);
+	my @params = ref $model ? () : ({
+		QueryMethod => ($opt->{query_method} // $ENV{PERLRDF_QUERY_METHOD} // "POST"),
+	});
+	my $query  = $qclass->new($sparql) or die RDF::Query->error;
+	if ($query->can('useragent')) {
+		$query->useragent->max_redirect(5);
+		$query->useragent->agent(
+			sprintf(
+				'%s/%s (%s) %s',
+				ref($self),
+				$self->VERSION,
+				$self->AUTHORITY,
+				$query->useragent->agent,
+			),
+		);
+	}
+	my $result = $query->execute($model, @params) or do { 
+		if (($ENV{PERLRDF_QUERY_DEBUG}//'') and $query->can('http_response')) {
+			warn $query->http_response->request->as_string;
+			for my $redir ($query->http_response->redirects) {
+				warn $redir->status_line;
+			}
+			warn $query->http_response->as_string;
+		}
+		die $query->error;
+	};
 	
 	if ($result->is_graph)
 	{
@@ -198,6 +226,10 @@ sub _process_sparql
 	
 	if ($result->is_bindings)
 	{
+		if (($ENV{PERLRDF_QUERY_DEBUG}//'') and $query->can('http_response')) {
+			warn $query->http_response->as_string;
+		}
+		
 		my $mat = $result->materialize;
 		
 		my (@outputs) = $self->_outputs(
@@ -254,9 +286,15 @@ This module adds query abilities to the C<perlrdf> command-line client.
 Please report any bugs to
 L<http://rt.cpan.org/Dist/Display.html?Queue=App-perlrdf-Command-Query>.
 
+=head1 ENVIRONMENT
+
+Set C<PERLRDF_QUERY_METHOD> to "GET" or "POST" specify a query method.
+
 =head1 SEE ALSO
 
-L<App::perlrdf>.
+L<App::perlrdf>, L<RDF::Query>, L<RDF::Query::Client>, L<Spreadsheet::Wright>.
+
+The L<rqsh> tool that comes with RDF::Query.
 
 =head1 AUTHOR
 
