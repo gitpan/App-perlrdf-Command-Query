@@ -7,7 +7,7 @@ my $meta = {
   "abstract"       => "SPARQL extension for App-perlrdf",
   "author"         => ["Toby Inkster (TOBYINK) <tobyink\@cpan.org>"],
   "dynamic_config" => 0,
-  "generated_by"   => "Moose::Meta::Class::__ANON__::SERIAL::7 version , CPAN::Meta::Converter version 2.140640",
+  "generated_by"   => "Dist::Inkt::Profile::TOBYINK version 0.016, CPAN::Meta::Converter version 2.140640",
   "keywords"       => [],
   "license"        => ["perl_5"],
   "meta-spec"      => {
@@ -31,12 +31,12 @@ my $meta = {
                         test => { requires => { "Test::More" => 0.61 } },
                       },
   "provides"       => {
-                        "App::perlrdf::Command::Query"           => { file => "lib/App/perlrdf/Command/Query.pm", version => 0.003 },
-                        "App::perlrdf::Command::QueryParse"      => { file => "lib/App/perlrdf/Command/QueryParse.pm", version => 0.003 },
-                        "App::perlrdf::Command::RDQL"            => { file => "lib/App/perlrdf/Command/RDQL.pm", version => 0.003 },
+                        "App::perlrdf::Command::Query"           => { file => "lib/App/perlrdf/Command/Query.pm", version => 0.004 },
+                        "App::perlrdf::Command::QueryParse"      => { file => "lib/App/perlrdf/Command/QueryParse.pm", version => 0.004 },
+                        "App::perlrdf::Command::RDQL"            => { file => "lib/App/perlrdf/Command/RDQL.pm", version => 0.004 },
                         "App::perlrdf::FileSpec::OutputBindings" => {
                                                                       file => "lib/App/perlrdf/FileSpec/OutputBindings.pm",
-                                                                      version => 0.003,
+                                                                      version => 0.004,
                                                                     },
                       },
   "release_status" => "stable",
@@ -46,9 +46,14 @@ my $meta = {
                                         },
                         homepage     => "https://metacpan.org/release/App-perlrdf-Command-Query",
                         license      => ["http://dev.perl.org/licenses/"],
+                        repository   => {
+                                          type => "git",
+                                          url  => "git://github.com/tobyink/p5-app-perlrdf-command-query.git",
+                                          web  => "https://github.com/tobyink/p5-app-perlrdf-command-query",
+                                        },
                         x_identifier => "http://purl.org/NET/cpan-uri/dist/App-perlrdf-Command-Query/project",
                       },
-  "version"        => 0.003,
+  "version"        => 0.004,
 };
 
 my %dynamic_config;

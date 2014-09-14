@@ -7,7 +7,7 @@ build_requires:
 configure_requires:
   ExtUtils::MakeMaker: '6.17'
 dynamic_config: 0
-generated_by: 'Moose::Meta::Class::__ANON__::SERIAL::7 version , CPAN::Meta::Converter version 2.140640'
+generated_by: 'Dist::Inkt::Profile::TOBYINK version 0.016, CPAN::Meta::Converter version 2.140640'
 keywords: []
 license: perl
 meta-spec:
@@ -25,16 +25,16 @@ optional_features: {}
 provides:
   App::perlrdf::Command::Query:
     file: lib/App/perlrdf/Command/Query.pm
-    version: '0.003'
+    version: '0.004'
   App::perlrdf::Command::QueryParse:
     file: lib/App/perlrdf/Command/QueryParse.pm
-    version: '0.003'
+    version: '0.004'
   App::perlrdf::Command::RDQL:
     file: lib/App/perlrdf/Command/RDQL.pm
-    version: '0.003'
+    version: '0.004'
   App::perlrdf::FileSpec::OutputBindings:
     file: lib/App/perlrdf/FileSpec/OutputBindings.pm
-    version: '0.003'
+    version: '0.004'
 requires:
   App::perlrdf: '0'
   JSON: '2.00'
@@ -47,4 +47,5 @@ resources:
   bugtracker: http://rt.cpan.org/Dist/Display.html?Queue=App-perlrdf-Command-Query
   homepage: https://metacpan.org/release/App-perlrdf-Command-Query
   license: http://dev.perl.org/licenses/
-version: '0.003'
+  repository: git://github.com/tobyink/p5-app-perlrdf-command-query.git
+version: '0.004'
